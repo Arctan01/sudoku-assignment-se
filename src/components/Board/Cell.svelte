@@ -104,20 +104,30 @@
 		@apply text-primary;
 	}
 
-	.selected {
-		background-color: rgba(59, 130, 246, 0.22);
-		color: #111827;
-	}
-
 	.same-area {
 		@apply bg-primary-lighter;
 	}
 
+	/* 2. 定义相同数字高亮（优先级中） */
 	.same-number {
 		@apply bg-primary-light;
 	}
 
+	/* 3. 定义选中状态（优先级最高） */
+	.selected {
+		/* 使用 !important 确保即使有其他 bg- 类，也会被覆盖 */
+		@apply bg-primary text-white !important; 
+		/* 或者如果你想保留原来的浅蓝色，可以增加边框对比 */
+		/* background-color: #2563eb !important; */
+	}
+
+	/* 4. 定义冲突状态（红色） */
 	.conflicting-number {
-		@apply text-red-600;
+		@apply text-red-600 !important;
+	}
+
+	/* 如果选中且冲突，通常依然显示选中色，但可以加个红色边框 */
+	.selected.conflicting-number {
+		@apply ring-4 ring-red-500 ring-inset !important;
 	}
 </style>
