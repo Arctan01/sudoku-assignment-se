@@ -2,44 +2,46 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # 如果你的主分支叫 master，请改为 master
+    branches: ["main"]
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# 确保同时只有一个部署任务在运行，避免竞态冲突
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # 升级到 v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4 # 升级到 v4
         with:
-          node-version: 18
+          node-version: 20 # 建议使用稳定版本 20 或 18
           cache: 'npm'
 
       - name: Install Dependencies
-        # 使用 --legacy-peer-deps 解决 Svelte 3/4 的版本冲突
         run: npm install --legacy-peer-deps
 
       - name: Build
-        # 执行 rollup 打包
         run: npm run build
 
       - name: Create .nojekyll
-        # 再次确保打包目录里有这个文件，防止 GitHub 乱动
         run: touch dist/.nojekyll
 
       - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v2
+        # 核心修复点：升级到 v3，它内部使用了兼容的 upload-artifact v4
+        uses: actions/upload-pages-artifact@v3 
         with:
-          # 这一步会把 dist 文件夹里的 bundle.js 等内容打包上传
           path: ./dist
 
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+        # 核心修复点：升级到 v4
+        uses: actions/deploy-pages@v4
