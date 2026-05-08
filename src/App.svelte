@@ -50,6 +50,7 @@
 	<!-- 接入侧边栏 -->
     <ExploreSidebar {gameStore} />
 </main>
+
 <!-- Keyboard -->
 <footer>
 	<Controls />

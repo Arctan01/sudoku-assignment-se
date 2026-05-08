@@ -113,12 +113,15 @@
 		@apply bg-primary-light;
 	}
 
-	/* 3. 定义选中状态（优先级最高） */
 	.selected {
-		/* 使用 !important 确保即使有其他 bg- 类，也会被覆盖 */
-		@apply bg-primary text-white !important; 
-		/* 或者如果你想保留原来的浅蓝色，可以增加边框对比 */
-		/* background-color: #2563eb !important; */
+		/* 
+		   - 不再使用 text-white，保留原本的文字颜色
+		   - 使用 bg-opacity 减淡背景，确保底色不吃掉笔记
+		   - 使用 ring 产生一个显眼的内边框 
+		*/
+		@apply bg-primary bg-opacity-35 ring-2 ring-inset ring-primary !important;
+		z-index: 20; /* 确保选中框的边框不会被相邻格子遮挡 */
+		position: relative;
 	}
 
 	/* 4. 定义冲突状态（红色） */
@@ -128,6 +131,6 @@
 
 	/* 如果选中且冲突，通常依然显示选中色，但可以加个红色边框 */
 	.selected.conflicting-number {
-		@apply ring-4 ring-red-500 ring-inset !important;
+		@apply ring-2 ring-red-500 ring-inset !important;
 	}
 </style>
