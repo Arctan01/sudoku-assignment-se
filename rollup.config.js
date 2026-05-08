@@ -7,22 +7,22 @@ import livereload from 'rollup-plugin-livereload';
 import svelte from 'rollup-plugin-svelte';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
-
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+import postcssImport from 'postcss-import';
+import cssnano from 'cssnano';
 const mode = process.env.NODE_ENV;
 const production = mode === 'production';
 
 const preprocess = sveltePreprocess({
-	postcss:  {
-		plugins: [
-			require('postcss-import'),
-			require('tailwindcss'),
-			require('autoprefixer'),
-			...(production ? [require('postcss-clean')] : []),
-		],
-	},
-	defaults: {
-		style: 'postcss',
-	},
+    postcss: {
+        plugins: [
+            postcssImport(),
+            tailwindcss(),
+            autoprefixer(),
+            production && cssnano(), // 仅在生产环境压缩
+        ].filter(Boolean),
+    },
 });
 
 export default {
